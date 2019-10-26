@@ -18,12 +18,12 @@ fn main(){
     let s:String = read();
 
     let mut ans = 0;
-    let mut previous_color = "";
+    let mut previous_color:String = "".to_string();
     for i in 0..n as usize {
-        if !(previous_color == &s[..i]){
+        if !(previous_color == s.chars().nth(i).unwrap().to_string()){
             ans += 1;
         }
-        previous_color = &s[..i];
+        previous_color = s.chars().nth(i).unwrap().to_string();
     }
     println!("{}",ans);
 }
