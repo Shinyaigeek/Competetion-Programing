@@ -73,7 +73,11 @@ fn main(){
     for a_i in 0..(n-2) {
         for b_i in (a_i+1)..(n-1){
             for c_i in (b_i+1)..n{
-                if l[c_i] < l[a_i] + l[b_i]{
+                let a = l.get(a_i).unwrap();
+                let b = l.get(b_i).unwrap();
+                let c = l.get(c_i).unwrap();
+
+                if c < &(a + b){
                     ans += 1;
                 }
             }
