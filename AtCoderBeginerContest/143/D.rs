@@ -67,18 +67,15 @@ fn main(){
     let stdin = stdin();
     let mut r = utils::StdinReader::new(stdin.lock());
     let n:usize = r.readl();
-    let l:Vec<usize> = r.read_vec();
+    let mut l:Vec<usize> = r.read_vec();
+    l.sort();
     let mut ans = 0;
-    for a_i in 0..n-2 {
-        for b_i in a_i+1..n-1{
-            for c_i in b_i+1..n{
-                let a = &l[a_i];
-                let b = &l[b_i];
-                let c = &l[c_i];
-                // println!("a:{},b:{},c:{}",a,b,c);
-                // if(a > b + c) && (b > a + c) && (c > a + b){
-                //     ans += 1;
-                // }
+    for a_i in 0..(n-2) {
+        for b_i in (a_i+1)..(n-1){
+            for c_i in (b_i+1)..n{
+                if l[c_i] < l[a_i] + l[b_i]{
+                    ans += 1;
+                }
             }
         }
     }
