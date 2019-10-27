@@ -1,4 +1,5 @@
 use std::io::stdin;
+use std::vec::Vec;
 
 mod utils {
     use std::io::BufRead;
@@ -29,6 +30,12 @@ mod utils {
             self.read_until(b'\n')
         }
 
+        #[allow(unused)]
+        #[inline]
+        pub fn read_vec<T: FromStr>(&mut self) -> Vec<T> {
+            return self.read_until::<String>(b'\n').trim().split_whitespace().map(|c| c.parse().ok().unwrap()).collect();
+        }
+
         #[inline]
         pub fn read_until<T: FromStr>(&mut self, delim: u8) -> T {
             loop {
@@ -44,20 +51,21 @@ mod utils {
                             self.buf.truncate(len - 1);
                         }
                         break;
+                    }
                 }
             }
-        }
 
-        let elem = unsafe { str::from_utf8_unchecked(&self.buf) };
-        elem.parse().unwrap_or_else(|_| panic!(format!("failed parsing: {}", elem)))
-    }
+            let elem = unsafe { str::from_utf8_unchecked(&self.buf) };
+            elem.parse().unwrap_or_else(|_| panic!(format!("failed parsing: {}", elem)))
+         }
     }
 }
+
 
 
 fn main(){
     let stdin = stdin();
     let mut r = utils::StdinReader::new(stdin.lock());
     let n:usize = r.readl();
-    println!("{}",n);
+    let mut l:Vec<usize> = r.read_vec();
 }
