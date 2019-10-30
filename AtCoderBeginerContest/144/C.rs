@@ -71,7 +71,6 @@ fn main(){
     let mut i = 1;
 
     for i in 1..((f64::sqrt(n as f64) + 1e-9) as usize + 1){
-        println!("{}",i);
         if n % i == 0{
             greatest_multiple = i;
         }
