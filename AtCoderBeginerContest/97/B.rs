@@ -82,5 +82,9 @@ fn main(){
         }
     }
 
+    if ans == 0{
+        ans = 1;
+    }
+
     println!("{}",ans);
 }
