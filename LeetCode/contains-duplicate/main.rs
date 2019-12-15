@@ -67,12 +67,13 @@ fn main(){
     let mut r = utils::StdinReader::new(stdin.lock());
     let mut nums:Vec<i32> = r.read_vec();
     let len = nums.len();
-    nums.sort();
-    nums.dedup();
-    if len > nums.len() {
-        println!("true");
+    let mut nums_copy = nums;
+    nums_copy.sort();
+    nums_copy.dedup();
+    if len > nums_copy.len() {
+        return true;
     }else{
-        println!("false");
+        return false;
     }
 
 }
