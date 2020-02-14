@@ -1,5 +1,6 @@
 use std::io::stdin;
 use std::vec::Vec;
+use std::num::Wrapping;
 
 mod utils {
     use std::io::BufRead;
@@ -61,22 +62,23 @@ mod utils {
     }
 }
 
+const MOD:i64 = 1000000007;
+
 
 fn main(){
     let stdin = stdin();
     let mut r = utils::StdinReader::new(stdin.lock());
     let n:i32 = r.readl();
-    let As:Vec<i32> = r.read_vec();
-    let mut ans = 0;
-    let mut max = 0;
-    let a_c = As.copy();
-    for a in As {
+    let As:Vec<i64> = r.read_vec();
+    let mut ans:i64 = 0;
+    let mut max:i64 = 0;
+    for a in As.clone() {
         if(max == 0){
             max = a;
-            ans = a;
+            // ans = a;
         }else{
             if(max % a == 0){
-                ans += max / a;
+                // ans += max / a;
             }else{
                 let mut gcm;
                 if(max > a){
@@ -85,28 +87,30 @@ fn main(){
                     gcm = getGCM(a,max);
                 }
                 let nannbai = a / gcm;
-                ans = nannbai * ans + max / gcm;
                 max = nannbai * max;
-                println!("max:{},ans:{}",max,ans);
+            // println!("gcm:{},a:{}",gcm,a);
             }
         }
+        // println!("max:{},a:{}",max,a);
     }
-    let mut ans2 = 0;
-    for an in a_c {
-        ans2 += max / an;
+    for a in As {
+        ans += max / a % MOD;
     }
-    println!("{}",ans2);
+    println!("ans:{},max:{}",ans % MOD,max);
 }
 
-fn getGCM(base:i32,tar:i32) -> i32 {
-    let mut ans:i32 = 1;
-    let mut tar_2 = tar;
+fn getGCM(base:i64,tar:i64) -> i64 {
+    let mut ans:i64 = 1;
+    let mut tar_b = tar;
+    let mut tar_a = base;
     while(true){
-        if(base % tar_2 == 0){
-            ans = tar_2;
+        if(tar_a % tar_b == 0){
+            ans = tar_b;
             break
         }
-        tar_2 = base % tar_2;
+        let temp = tar_b;
+        tar_b = tar_a % tar_b;
+        tar_a = temp;
     }
     return ans;
 }
