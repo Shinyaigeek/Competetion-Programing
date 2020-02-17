@@ -65,11 +65,11 @@ mod utils {
 fn main(){
     let stdin = stdin();
     let mut r = utils::StdinReader::new(stdin.lock());
-    println!("{}",regularExpression(String::from("mississippi"), String::from("c*a*b")));
+    println!("{}",regularExpression(String::from("aab"), String::from("c*a*b")));
 }
 
 fn regularExpression(s:String, p:String) -> bool {
-    let ps: Vec<&str> = p.split("*").collect();
+    let mut ps: Vec<&str> = p.split("*").collect();
 
     struct Parsed {
         un_omitted: String,
@@ -80,8 +80,8 @@ fn regularExpression(s:String, p:String) -> bool {
     impl Parsed {
         pub fn new(target: String, is_last:bool) -> Parsed {
             let mut copied = String::from(&target);
-            let mut un_omitted = String::from(&copied);
-            let mut omitted = String::from("");
+            let mut un_omitted = String::from("");
+            let mut omitted = String::from(&copied);
             if(!is_last){
                 omitted = match copied.pop() {
                     None => String::from(""),
@@ -95,10 +95,15 @@ fn regularExpression(s:String, p:String) -> bool {
 
     let mut parsed_s:Vec<Parsed>  = Vec::new();
 
-    for i in 0..ps.len() {
-        let j = ps[i];
-        let is_last = i == ps.len() - 1;
-        parsed_s.push(Parsed::new(String::from(j),is_last));
+    if(ps.len() != 1){
+        for i in 0..ps.len() {
+            let j = ps[i];
+            let is_last = i == ps.len() - 1;
+            parsed_s.push(Parsed::new(String::from(j),is_last));
+        }
+    }else {
+        let yake = Parsed { un_omitted: String::from(ps[0]), omitted: String::from(""), next_un_omitted : String::from("")};
+        parsed_s.push(yake);
     }
 
     let mut s_copied = s;
@@ -110,17 +115,19 @@ fn regularExpression(s:String, p:String) -> bool {
         if(i == parsed_s.len() - 1 && parsed.omitted.len() + parsed.un_omitted.len() == 0){
             return true;
         }
-        if(!s_copied.starts_with(&parsed.un_omitted)){
+        if(!dot_starts_with(&s_copied , &parsed.un_omitted)){
             return false;
         }
         let (f,l) = s_copied.split_at(parsed.un_omitted.len());
         println!("l:{}\nf:{}",l,f);
         println!("i:{}\nparsed_s.len:{}",i,parsed_s.len());
+        // println!("aa:{}",parsed_s[i + 1].un_omitted);
         if(i < parsed_s.len() - 1){
-            let (must_check, next_s) = match l.find(&parsed_s[i + 1].un_omitted) {
+            let (must_check, next_s) = match dot_find(&l, &parsed_s[i + 1].un_omitted) {
                 None => return false,
                 Some(s) => l.split_at(s)
             };
+            println!("must_check:{}\nnext_s:{}",must_check,next_s);
             if(must_check.len() != 0) {
                 for m_c in must_check.chars() {
                     if(m_c.to_string() != parsed.omitted){
@@ -132,9 +139,11 @@ fn regularExpression(s:String, p:String) -> bool {
         }else {
             if(l.len() != 0) {
                 for m_c in l.chars() {
-                    println!("m_c:{}\n",m_c);
-                    if(m_c.to_string() != parsed.omitted){
-                        return false;
+                    // println!("m_c:{}\n",m_c);
+                    if(parsed.omitted != "."){
+                        if(m_c.to_string() != parsed.omitted){
+                            return false;
+                        }
                     }
                 }
             }
@@ -144,4 +153,55 @@ fn regularExpression(s:String, p:String) -> bool {
     }
 
     true
+}
+
+fn dot_starts_with (target:&str, q:&str) -> bool {
+    let qo = q.to_string();
+    let to = q.to_string();
+    let qs: Vec<&str> = qo.split("").collect();
+    let ts: Vec<&str> = to.split("").collect();
+    for i in 0..ts.len() {
+        if (qs[i] != ts[i]) && qs[i] != "." {
+            return false;
+        }
+    }
+
+    true
+}
+
+fn dot_find (target:&str, q:&str) -> Option<usize> {
+    let to = target.to_string();
+    let qo = q.to_string();
+    let ts: Vec<&str> = to.split("").collect();
+    let qs: Vec<&str> = qo.split("").collect();
+
+    println!("target:{}\nq:{}",target,q);
+
+    if(q == "") && target == "" {
+        return Some(0);
+    }
+
+    if(q == ""){
+        return Some(0);
+    }
+
+    if(target == ""){
+        return None;
+    }
+
+    let mut qi = 1;
+    for i in 1..ts.len() - 1 {
+        println!("ts[i]:{}\nqs[qi]:{}",ts[i],qs[qi]);
+        if(ts[i] == qs[qi]) || qs[qi] == "." {
+            qi += 1;
+            println!("qi:{}\nqs:{}\ni:{}",qi,qs.len(),i);
+            if(qi >= qs.len() - 1) {
+                println!("ans i:{}",i - 1);
+                return Some(i - 1);
+            }
+        }else{
+            qi = 1;
+        }
+    }
+    None
 }
