@@ -75,7 +75,6 @@
 		],
 		"description": "Set StartUp AtCoder"
 	},
-
 	"gcb": {
 		"prefix": "gcb",
 		"body": [
@@ -90,6 +89,36 @@
 			""
 		],
 		"description": "set gcb"
+	},
+	"bubble_sort": {
+		"prefix": "bubble_sort",
+		"body": [
+			"",
+			"pub fn bubble_sort (target: Vec<usize>, asc: bool) -> Vec<usize> {",
+			"  let len = target.len();",
+			"  let mut res = target;",
+			"  for i in 0..len-1 {",
+			"    for j in 1..(len -i) {",
+			"      let idx = len - j;",
+			"      let mut store;",
+			"      if(asc) {",
+			"        if(res[idx] > res[idx-1]) {",
+			"          store = res[idx - 1];",
+			"          res[idx-1] = res[idx];",
+			"          res[idx] = store;",
+			"        }",
+			"      }else{",
+			"        if(res[idx] < res[idx-1]){",
+			"          store = res[idx - 1];",
+			"          res[idx-1] = res[idx];",
+			"          res[idx] = store;",
+			"        }",
+			"      }",
+			"    }",
+			"  }",
+			"  res",
+			"}"
+		],
+		"description": "set bubble_sort"
 	}
-
 }
