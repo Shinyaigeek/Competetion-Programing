@@ -70,12 +70,29 @@ fn main(){
     let i = get_min(&tar);
 
     let o = tar[0];
-    println!("i:{}, o:{}", i,o);
+
+    let sliced = get_slice(&tar, 1, 3);
+    for e in sliced { 
+        println!("{}", e);
+    }
+    let y = tar[0];
+    println!("i:{}, o:{}, y:{}", i,o, y);
 }
 
 // pub fn selection_method(target: Vec<usize>) -> Vec<usize> {
 
 // }
+
+pub fn get_slice(target: &Vec<usize>, from:usize, to:usize) -> Vec<usize> {
+    if(from < 0) || (from >= target.len()) || (from > to) || (to > target.len()) {
+        panic!("get_slice: check from, to, target:length");
+    }
+    let mut res = Vec::new();
+    for idx in from..to {
+        res.push(target[idx]);
+    }
+    res
+}
 
 pub fn get_min(target: &Vec<usize>) -> usize {
     let mut min:usize = usize::max_value();
