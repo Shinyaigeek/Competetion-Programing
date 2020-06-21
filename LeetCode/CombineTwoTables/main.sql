@@ -3,4 +3,4 @@
 --     FROM Person
 -- );
 
-SELECT FirstName, LastName, City, Status From Address INNER JOIN Person ON Address.PersonId = Person.PersonId;
+SELECT FirstName, LastName, City, Status From Address RIGHT OUTER JOIN Person ON Address.PersonId = Person.PersonId;
